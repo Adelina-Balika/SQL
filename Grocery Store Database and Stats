@@ -1,0 +1,29 @@
+--create an art store database.
+CREATE TABLE artists_gallery(id INTEGER PRIMARY KEY, item TEXT, price INTEGER, aisle INTEGER, discount TEXT);
+
+--insert all the products sold at the art store database created and details about the items.
+INSERT INTO artists_gallery VALUES 
+(1,"paint", 5, 3, "discounted"),
+(2, "brushes", 7, 9, "no"),
+(3,"panel",12,3,"discounted"),
+(4,"pallet",5,3,"no"),
+(5,"pens",3,9,"no"),
+(6,"pencil",3,9,"discounted"),
+(7,"sketchbook", 20,5,"no"),
+(8,"oil paints",12,4,"no"),
+(9,"acrylics", 12,4,"no"),
+(10,"sponges", 5,3,"discounted"),
+(11,"canvas",15,8,"discounted"),
+(12,"markers",7,4,"discounted"),
+(13,"crayons",3,4,"discounted"),
+(14,"erasers",2,5,"no"),
+(15,"glue",7,8,"discounted");
+
+--create a graph showing all the information and the details about the items.
+SELECT * FROM artists_gallery;
+
+--organize the items based on price low to high. 
+SELECT * FROM artists_gallery ORDER BY price ASC;
+
+--add up all the prices of discounted items and non-discounted items on a table.
+SELECT discount, SUM(price) FROM artists_gallery GROUP BY discount;
