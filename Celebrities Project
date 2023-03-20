@@ -1,0 +1,133 @@
+ /* created a table titled "Celebs" that contains values like name, age, etc. in the database. */
+CREATE TABLE celebs (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, gender TEXT, birthdate TEXT, marital_status TEXT);
+ 
+/*Input values into the newly created table "celebs." */
+INSERT INTO celebs(name,age,gender,birthdate,marital_status) 
+ VALUES
+ ("Justin Bieber", 29, "Male","March 1 1994", "Married"),
+ ("Selena Gomez", 30, "Female","July 22 1992", "Dating"),
+ ("Hailey Bieber", 26, "Female","November 22 1996", "Married"),
+ ("Meghan Trainor", 29, "Female","December 22 1993", "Married"),
+ ("Ryan Reynolds", 46, "Male","October 23 1976", "Married"),
+ ("Blake Lively", 35, "Female","August 25 1987", "Married"),
+ ("Taylor Swift", 33, "Female","December 13 1989", "Single"),
+ ("Daryl Sabara", 30, "Male","June 14 1992", "Married"),
+ ("Shawn Mendes", 24, "Male","August 8 1998", "Dating"),
+ ("Beyoncé", 41, "Female","September 4 1981", "Married"),
+ ("Jay-Z", 53, "Male","December 4 1969", "Married"),
+ ("Austin Butler", 31, "Male","August 17 1991", "Single"),
+ ("Kendall Jenner", 27, "Female","November 3 1995", "Dating"),
+ ("Mila Kunis", 39, "Female","August 14, 1983", "Married"),
+ ("Ashton Kutcher", 45, "Male","February 7, 1978", "Married"),
+ ("Sofía Vergara", 50, "Female","July 10 1972", "Married"),
+ ("Jenna Ortega", 20, "Female","September 27 2002", "Single"),
+ ("John Legend", 44, "Male","December 28 1978", "Married"),
+ ("Chrissy Teigen", 37, "Female","November 30 1985", "Married"),
+ ("Harry Styles", 29, "Male","February 1 1994", "Single");
+ 
+ 
+ /* created a table titled talents that contains values relating to the previous table in the database. */
+ CREATE TABLE talents (id INTEGER PRIMARY KEY, celeb_id INTEGER ,person_name TEXT, talent TEXT, popularity_rating INTEGER);
+
+        
+/*Input values into the newly created table "talents" */
+        INSERT INTO talents(celeb_id, person_name,talent,popularity_rating) 
+ VALUES 
+ (1,"Justin Bieber", "singer",2),
+ (2,"Selena Gomez", "actress",6),
+ (3,"Hailey Bieber", "model",49),
+ (4,"Meghan Trainor", "singer",109),
+ (5,"Ryan Reynolds", "actor",296),
+ (6,"Blake Lively", "actress",604),
+ (7,"Taylor Swift", "singer",12),
+ (8,"Daryl Sabara", "actor",5138),
+ (9,"Shawn Mendes", "singer",25),
+ (10,"Beyoncé", "singer",35),
+ (11,"Jay-Z", "rapper",475),
+ (12,"Austin Butler", "actor",372),
+ (13,"Kendall Jenner", "model",48),
+ (14,"Mila Kunis","actress",894),
+ (15,"Ashton Kutcher", "actor",1565),
+ (16,"Sofía Vergarar", "actress",702),
+ (17,"Jenna Ortega", "actress",9),
+ (18,"John Legend", "rapper",1411),
+ (19,"Chrissy Teigen", "model",2675),
+ (20,"Harry Styles", "singer",21);
+ 
+   /*Created a table titled "marriages" that contains values relating to values in the previous two tables in the database.*/
+        CREATE TABLE marriages (id INTEGER PRIMARY KEY, celebrity1_id INTEGER, celebrity2_id INTEGER);
+  
+/*Input values into the newly created table "marriages" */
+  INSERT INTO marriages (celebrity1_id, celebrity2_id) 
+  VALUES 
+  (1,3),
+  (5,6),
+  (4,8),
+  (10,11),
+  (18,19);
+  
+  /*Pulled data from both the "celebs" table as well as the "talents" table in order to create a graph showing values that show the celebrities' names,
+Talent and popularity ratings are ordered by age, starting from the youngest to the oldest.*/
+  SELECT celebs.name, celebs.age, talents.talent, 
+  talents.popularity_rating 
+     FROM celebs 
+    JOIN talents 
+     ON celebs.id = talents.celeb_id
+  ORDER BY celebs.age ASC;
+  
+ 
+ /*pulled data from both the "marriages" table as well as the "celebs" table and used self-joins and outer-joins to join values from the same table 
+ and differentiate them to split and organize the data by celebrities who are married to each other.*/
+ SELECT a.name, b.name
+    FROM marriages 
+     JOIN celebs a
+    ON marriages.celebrity1_id = a.id
+    JOIN celebs b
+ ON marriages.celebrity2_id = b.id;
+  
+
+/*section the data into easier to read groups */
+SELECT person_name AS "CELEBRITY", talent AS "TALENT", 
+     CASE 
+    WHEN talent = "actor" or talent="actress" THEN "BigScreen"
+    WHEN talent = "singer" OR talent="rapper" THEN "Music"
+    WHEN talent = "model" THEN "Fashion"
+    END AS "INDUSTRY" 
+    FROM talents
+ ORDER BY "INDUSTRY";
+ 
+ 
+ /*show the sum or celebrities in each industry*/
+ SELECT COUNT(*) AS "amount_in_industry" ,
+    CASE 
+    WHEN talent = "actor" or talent="actress" THEN "BigScreen"
+    WHEN talent = "singer" OR talent="rapper" THEN "Music"
+    WHEN talent = "model" THEN "Fashion"
+     END AS "INDUSTRY" 
+     FROM talents
+ GROUP BY "INDUSTRY";
+ 
+ 
+ /*used self-joins in order to show what industry the top 100 most popular celebrities were in. */
+ 
+  SELECT celebs.name, celebs.age, talents.talent,
+  talents.popularity_rating 
+    FROM celebs 
+    JOIN talents 
+     ON celebs.id = talents.celeb_id 
+    WHERE popularity_rating < 100
+  ORDER BY popularity_rating ASC;
+  
+
+/*  How many of the top 100 celebrities are in each industry?  */ 
+SELECT COUNT(*) AS "amount_in_industry_ top_100",
+     CASE 
+    WHEN talent = "actor" or talent="actress"  THEN "BigScreen"
+    WHEN talent = "singer" OR talent="rapper" THEN "Music"
+    WHEN talent = "model" THEN "Fashion"
+    END AS "INDUSTRY" 
+     FROM talents
+     WHERE  popularity_rating < 100
+ GROUP BY "INDUSTRY";
+  
+  
